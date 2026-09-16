@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Nadu Guide AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #090f1c;
+            --panel: rgba(17, 28, 48, 0.84);
+            --soft: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f4f7ff;
+            --muted: #a2b1c5;
+            --accent: #ff9b54;
+            --accent-two: #ff5f75;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 10% 12%, rgba(255, 155, 84, .18), transparent 30%),
+                radial-gradient(circle at 90% 88%, rgba(255, 95, 117, .16), transparent 30%),
+                var(--bg);
+        }
+
+        .app {
+            width: min(1080px, 100%);
+            height: min(760px, 92vh);
+            display: grid;
+            grid-template-columns: 285px 1fr;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: var(--panel);
+            backdrop-filter: blur(22px);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, .45);
+        }
+
+        .sidebar {
+            padding: 28px 22px;
+            border-right: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(255,255,255,.045), transparent);
+        }
+
+        .logo {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            font-size: 29px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-two));
+            box-shadow: 0 14px 34px rgba(255, 100, 100, .24);
+        }
+
+        h1 {
+            margin: 18px 0 7px;
+            font-size: 23px;
+        }
+
+        .description {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .card {
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--soft);
+        }
+
+        .card-title {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .card-text {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .chat {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            min-height: 82px;
+            padding: 20px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #58e39a;
+            box-shadow: 0 0 14px #58e39a;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 18px;
+            animation: appear .2s ease-out;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .bubble {
+            max-width: min(78%, 680px);
+            padding: 13px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.58;
+            white-space: pre-wrap;
+        }
+
+        .assistant .bubble {
+            border: 1px solid var(--border);
+            border-top-left-radius: 7px;
+            background: var(--soft);
+        }
+
+        .user .bubble {
+            border-bottom-right-radius: 7px;
+            background: linear-gradient(135deg, #e97838, #e84f70);
+            box-shadow: 0 10px 28px rgba(210, 75, 70, .2);
+        }
+
+        .composer {
+            padding: 18px 22px 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .input-box {
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            background: rgba(0, 0, 0, .18);
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            padding: 12px 13px;
+            color: var(--text);
+            background: transparent;
+            font-size: 14px;
+        }
+
+        input::placeholder {
+            color: #71849b;
+        }
+
+        button {
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 14px;
+            cursor: pointer;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-two));
+            box-shadow: 0 8px 20px rgba(230, 92, 80, .24);
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            margin-top: 9px;
+            color: #718399;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 0;
+            }
+
+            .app {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .bubble {
+                max-width: 88%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">🌴</div>
+
+            <h1>Tamil Nadu Guide AI</h1>
+
+            <p class="description">
+                A focused AI assistant for Tamil Nadu information,
+                education, culture, tourism, transport, food and more.
+            </p>
+
+            <div class="card">
+                <span class="card-title">📍 Tamil Nadu Focus</span>
+                <span class="card-text">
+                    The assistant is designed to stay within Tamil Nadu-related topics.
+                </span>
+            </div>
+
+            <div class="card">
+                <span class="card-title">⚡ Gemini 3.1 Flash-Lite</span>
+                <span class="card-text">
+                    Powered by the requested Gemini model for fast responses.
+                </span>
+            </div>
+        </aside>
+
+        <main class="chat">
+            <header class="header">
+                <span class="header-title">Ask about Tamil Nadu</span>
+
+                <span class="status">
+                    <span class="status-dot"></span>
+                    Online
+                </span>
+            </header>
+
+            <section id="messages">
+                <div class="message assistant">
+                    <div class="bubble">
+                        Vanakkam! 👋 I’m Tamil Nadu Guide AI.
+                        Ask me about Tamil Nadu's districts, cities, history,
+                        culture, education, tourism, food, transport, industries
+                        and other Tamil Nadu-related topics.
+                    </div>
+                </div>
+            </section>
+
+            <div class="composer">
+                <div class="input-box">
+                    <input
+                        id="messageInput"
+                        type="text"
+                        autocomplete="off"
+                        placeholder="Ask a Tamil Nadu-related question..."
+                    >
+
+                    <button id="send" aria-label="Send message">➤</button>
+                </div>
+
+                <div class="hint">
+                    Tamil Nadu-related questions only
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const messages = document.getElementById("messages");
+        const input = document.getElementById("messageInput");
+        const sendButton = document.getElementById("send");
+
+        function addMessage(text, role) {
+            const message = document.createElement("div");
+            message.className = `message ${role}`;
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.textContent = text;
+
+            message.appendChild(bubble);
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = input.value.trim();
+
+            if (!message || sendButton.disabled) {
+                return;
+            }
+
+            addMessage(message, "user");
+            input.value = "";
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Request failed");
+                }
+
+                addMessage(data.reply, "assistant");
+            } catch (error) {
+                addMessage(
+                    "Sorry, I could not process your question right now.",
+                    "assistant"
+                );
+            } finally {
+                sendButton.disabled = false;
+                input.focus();
+            }
+        }
+
+        sendButton.addEventListener("click", sendMessage);
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        input.focus();
+    </script>
+</body>
+</html>
